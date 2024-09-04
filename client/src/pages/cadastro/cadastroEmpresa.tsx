@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import alignJustifyFill from '@iconify-icons/mingcute/align-justify-fill';
 import logo from '../../assets/logo.png';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 function CadastroEmpresa() {
     const navigate = useNavigate();
@@ -23,6 +25,39 @@ function CadastroEmpresa() {
         endereco: string;
         telefone: string;
         email: string;
+    }
+
+    const exportToExcel = async function (event: any) {
+        event.preventDefault();
+
+        // Criar uma nova instância do Workbook
+        const workbook = new ExcelJS.Workbook();
+
+        // Adicionar uma nova planilha
+        const worksheet = workbook.addWorksheet('Sheet1');
+
+        // Adicionar cabeçalhos de coluna
+        const headers = ['Razão Social', 'CNPJ', 'Endereço', 'Telefone', 'Email'];
+        worksheet.addRow(headers);
+
+        // Adicionar dados à planilha usando map
+        dados.map(dado => {
+            const row = [
+                dado.razao_social,
+                dado.cnpj,
+                dado.endereco,
+                dado.telefone,
+                dado.email
+            ];
+            worksheet.addRow(row);
+        });
+
+        // Gerar o arquivo
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        // Salvar o arquivo
+        const blob = new Blob([buffer], { type: 'application/octet-stream' });
+        saveAs(blob, 'Cadastro_Empresas.xlsx');
     }
 
     async function buscaEmpresas() {
@@ -117,7 +152,7 @@ function CadastroEmpresa() {
                     <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
-                    <button type="submit" className="btn btn-primary w-100 mt-2" style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }} onClick={function () {navigate(`/cadastro/cadastroEmpresa`)}}>Cadastro de Empresas</button>
+                    <button type="submit" className="btn btn-primary w-100 mt-2" style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }} onClick={function () { navigate(`/cadastro/cadastroEmpresa`) }}>Cadastro de Empresas</button>
                 </div>
                 <div className="d-flex justify-content-center mb-4">
                     <button className="btn btn-sm btn-outline-secondary w-50"
@@ -163,7 +198,8 @@ function CadastroEmpresa() {
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-center">
-                                    <button type="submit" className="btn btn-primary w-50 mt-3" onClick={cadastraEmpresa} style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }}>Cadastrar</button>
+                                    <button type="submit" className="btn btn-primary w-25 mt-3" onClick={cadastraEmpresa} style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }}>Cadastrar</button>
+                                    <button type="submit" className="btn btn btn-success w-25 mt-3" onClick={exportToExcel} style={{ borderRadius: "8px", marginLeft: "10px" }}>Exportar para Excel</button>
                                 </div>
                             </form>
                             <div>
