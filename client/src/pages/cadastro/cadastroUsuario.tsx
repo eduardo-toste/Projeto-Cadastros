@@ -10,10 +10,6 @@ function CadastroUsuario() {
     const [senha, setSenha] = useState<string>();
     const [nome, setNome] = useState<string>();
 
-    function teste() {
-        
-    }
-
     async function cadastraUsuario(event: any) {
         event.preventDefault();
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CadastroUsuario from "./pages/cadastro/cadastroUsuario";
 import CadastroEmpresa from "./pages/cadastro/cadastroEmpresa";
+import Home from "./pages/home/home";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro/cadastroUsuario" element={<CadastroUsuario />} />
         <Route path="/cadastro/cadastroEmpresa" element={<CadastroEmpresa />} />
+        <Route path="/home/home" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

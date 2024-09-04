@@ -2,11 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from "@iconify/react";
+import eyeOutline from '@iconify/icons-mdi/eye-outline';
+import eyeOffOutline from '@iconify/icons-mdi/eye-off-outline';
 
 function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState<string>();
     const [senha, setSenha] = useState<string>();
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+
+    const botaoMostrarSenha = () => {
+        setMostrarSenha(!mostrarSenha);
+    };
 
     async function autenticaLogin(event: any) {
         event.preventDefault();
@@ -22,7 +30,7 @@ function Login() {
                 email
             }).then(function (resposta) {
                 toast.success(resposta.data.message)
-                navigate('/cadastro/cadastroEmpresa');
+                navigate('/home/home');
             }).catch(function (erro) {
                 console.log(erro);
                 if (erro.response.status === 404) {
@@ -53,9 +61,24 @@ function Login() {
                                 </div>
                                 <div className="form-group mb-2">
                                     <label htmlFor="password" className="form-label" style={{ color: "#4a5568" }}>Senha</label>
-                                    <input type="password" className="form-control" value={senha} placeholder="Insira sua senha" onChange={(event) => {
+                                    <input type={mostrarSenha ? 'text' : 'password'} className="form-control" value={senha} placeholder="Insira sua senha" onChange={(event) => {
                                         setSenha(event.target.value);
                                     }} style={{ borderColor: "#cbd5e0", borderRadius: "8px" }} />
+                                    <button
+                                        type="button"
+                                        onClick={botaoMostrarSenha}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            right: '20px',
+                                            transform: 'translateY(-50%)',
+                                            border: 'none',
+                                            background: 'transparent',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <Icon icon={mostrarSenha ? eyeOutline : eyeOffOutline} width="20" height="20" />
+                                    </button>
                                 </div>
                                 <button type="submit" className="btn btn-primary w-100 mt-3" onClick={autenticaLogin} style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }}>Entrar</button>
                             </form>
