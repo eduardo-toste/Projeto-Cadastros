@@ -29,6 +29,11 @@ function Login() {
                 senha,
                 email
             }).then(function (resposta) {
+                
+                const { token } = resposta.data;
+                // Armazena o token no localStorage
+                localStorage.setItem('jwtToken', token);
+
                 toast.success(resposta.data.message)
                 navigate('/home/home');
             }).catch(function (erro) {
