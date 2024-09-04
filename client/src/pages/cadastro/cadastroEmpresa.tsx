@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import alignJustifyFill from '@iconify-icons/mingcute/align-justify-fill';
+import logo from '../../assets/logo.png';
 
 function CadastroEmpresa() {
     const navigate = useNavigate();
@@ -103,7 +104,9 @@ function CadastroEmpresa() {
                         <button className="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
                             <Icon icon={alignJustifyFill} width="30" height="30" />
                         </button>
-                        <a className="navbar-brand" href="/home/home">Home</a>
+                        <a className="navbar-brand" href="/home/home">
+                            <img src={logo} width="50" height="50" style={{ borderRadius: "10px" }} />
+                        </a>
                     </div>
                 </div>
             </nav>
