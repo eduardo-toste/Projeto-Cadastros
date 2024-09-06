@@ -17,15 +17,15 @@ async function buscaEmpresas(req, res) {
             })
         }
 
-    } catch(error) {
+    } catch (error) {
         return res.status(500).send({
             message: "Ocorreu um erro ao tentar buscar usuários: " + error.message
         })
     }
 }
 
-async function cadastraEmpresa(req,res){
-    try{
+async function cadastraEmpresa(req, res) {
+    try {
         const {
             cnpj,
             razaoSocial,
@@ -50,17 +50,46 @@ async function cadastraEmpresa(req,res){
             )
             `)
 
-            return res.status(200).send({
-                message: "Empresa cadastrada com sucesso"
-            })
-    } catch(error) {
+        return res.status(200).send({
+            message: "Empresa cadastrada com sucesso"
+        })
+    } catch (error) {
         return res.status(500).send({
             message: "Ocorreu um erro ao tentar cadastrar a empresa: " + error.message
         })
     }
 }
 
+async function excluiEmpresa(req, res) {
+    try {
+
+        const {
+            idExcluido
+        } = req.params
+
+        const usuarioExiste = await db.query(`SELECT id FROM cadastro_empresas WHERE id = '${idExcluido}';`)
+
+        if (usuarioExiste.recordset.length == 0) {
+            return res.status(406).send({
+                message: "Este usuário não foi encontrado"
+            })
+        }
+
+        await db.query(`DELETE FROM cadastro_empresas WHERE id = '${idExcluido}';`)
+
+        return res.status(200).send({
+            message: "Empresa excluida com sucesso"
+        })
+
+    } catch (erro) {
+        return res.status(500).send({
+            message: "Ocorreu um erro ao tentar excluir o empresa: " + error.message
+        })
+    }
+}
+
 module.exports = {
     buscaEmpresas,
-    cadastraEmpresa
+    cadastraEmpresa,
+    excluiEmpresa
 }

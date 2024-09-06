@@ -7,6 +7,9 @@ import alignJustifyFill from '@iconify-icons/mingcute/align-justify-fill';
 import logo from '../../assets/logo.png';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { FaBuilding } from 'react-icons/fa';
+import trashIcon from '@iconify/icons-mdi/trash';
+import pencilIcon from '@iconify/icons-mdi/pencil';
 
 function CadastroEmpresa() {
     const navigate = useNavigate();
@@ -17,6 +20,7 @@ function CadastroEmpresa() {
     const [telefone, setTelefone] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [dados, setDados] = useState<Dado[]>([]);
+    const [idExcluido, setIdexcluido] = useState<string>();
 
     interface Dado {
         id: number;
@@ -72,6 +76,26 @@ function CadastroEmpresa() {
     useEffect(() => {
         buscaEmpresas()
     }, []);
+
+    async function excluiEmpresa(id: string) {
+
+        const idExcluido = id
+
+        await axios.delete(`http://localhost:8000/exclui/empresa/${idExcluido}`)
+            .then(function (resposta) {
+                toast.success(resposta.data.message)
+                setIdexcluido('')
+                buscaEmpresas()
+            }).catch(function (erro) {
+                console.log(erro);
+                if (erro.response.status === 403 || erro.response.status === 402) {
+                    // toast.error("Token vencido, faça seu login novamente")
+                } else {
+                    toast.error(erro.response.data);
+                }
+            })
+
+    }
 
 
     async function validaCNPJ() {
@@ -133,40 +157,9 @@ function CadastroEmpresa() {
 
     return (
         <>
-            <nav className="navbar bg-body-secondary">
-                <div className="container-fluid">
-                    <div>
-                        <button className="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                            <Icon icon={alignJustifyFill} width="30" height="30" />
-                        </button>
-                        <a className="navbar-brand" href="/home/home">
-                            <img src={logo} width="50" height="50" style={{ borderRadius: "10px" }} />
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            <div className="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-                <div className="offcanvas-header">
-                    <h5 className="offcanvas-title" id="offcanvasScrollingLabel">Opções do Menu</h5>
-                    <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div className="offcanvas-body">
-                    <button type="submit" className="btn btn-primary w-100 mt-2" style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }} onClick={function () { navigate(`/cadastro/cadastroEmpresa`) }}>Cadastro de Empresas</button>
-                </div>
-                <div className="d-flex justify-content-center mb-4">
-                    <button className="btn btn-sm btn-outline-secondary w-50"
-                        style={{ borderRadius: "8px" }}
-                        onClick={function () {
-                            navigate(`/login/`)
-                        }}>
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-            <div className="container d-flex justify-content-center align-items-center vh-100">
-                <div className="col-md-8">
+            
+            <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
+                <div className="col-lg-8 col-md-10 col-sm-12">
                     <div className="card shadow-lg" style={{ borderRadius: "15px" }}>
                         <div className="card-body p-4 position-relative">
                             <h3 className="card-title text-center mb-4" style={{ color: "#5a67d8" }}>Cadastro de Empresas</h3>
@@ -199,7 +192,7 @@ function CadastroEmpresa() {
                                 </div>
                                 <div className="d-flex justify-content-center">
                                     <button type="submit" className="btn btn-primary w-25 mt-3" onClick={cadastraEmpresa} style={{ backgroundColor: "#5a67d8", borderColor: "#5a67d8", borderRadius: "8px" }}>Cadastrar</button>
-                                    <button type="submit" className="btn btn btn-success w-25 mt-3" onClick={exportToExcel} style={{ borderRadius: "8px", marginLeft: "10px" }}>Exportar para Excel</button>
+                                    <button type="button" className="btn btn-success w-25 mt-3" onClick={exportToExcel} style={{ borderRadius: "8px", marginLeft: "10px" }}>Exportar para Excel</button>
                                 </div>
                             </form>
                             <div>
@@ -213,6 +206,7 @@ function CadastroEmpresa() {
                                                 <th style={{ color: "#4a5568" }}>Endereço Completo</th>
                                                 <th style={{ color: "#4a5568" }}>Telefone de Contato</th>
                                                 <th style={{ color: "#4a5568" }}>E-mail</th>
+                                                <th style={{ color: "#4a5568" }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -223,6 +217,16 @@ function CadastroEmpresa() {
                                                     <td>{dado.endereco}</td>
                                                     <td>{dado.telefone}</td>
                                                     <td>{dado.email}</td>
+                                                    <td>
+                                                        <div className="d-flex">
+                                                            <button type="button" className="btn">
+                                                                <Icon icon={pencilIcon} style={{ fontSize: '20px' }} />
+                                                            </button>
+                                                            <button type="button" className="btn" onClick={() => excluiEmpresa(`${dado.id}`)}>
+                                                                <Icon icon={trashIcon} style={{ fontSize: '20px' }} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
