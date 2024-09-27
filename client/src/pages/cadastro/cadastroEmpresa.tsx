@@ -9,7 +9,11 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { FaBuilding } from 'react-icons/fa';
 import trashIcon from '@iconify/icons-mdi/trash';
-import pencilIcon from '@iconify/icons-mdi/pencil';
+import pencilIcon from '@iconify/icons-mdi/pencil'
+import React from 'react';
+import ModalEditar from "../../components/modal/modalEditarEmpresa";
+
+
 
 function CadastroEmpresa() {
     const navigate = useNavigate();
@@ -155,9 +159,19 @@ function CadastroEmpresa() {
         });
     }
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <>
-            
+
             <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
                 <div className="col-lg-8 col-md-10 col-sm-12">
                     <div className="card shadow-lg" style={{ borderRadius: "15px" }}>
@@ -219,9 +233,7 @@ function CadastroEmpresa() {
                                                     <td>{dado.email}</td>
                                                     <td>
                                                         <div className="d-flex">
-                                                            <button type="button" className="btn">
-                                                                <Icon icon={pencilIcon} style={{ fontSize: '20px' }} />
-                                                            </button>
+                                                            <ModalEditar />
                                                             <button type="button" className="btn" onClick={() => excluiEmpresa(`${dado.id}`)}>
                                                                 <Icon icon={trashIcon} style={{ fontSize: '20px' }} />
                                                             </button>
