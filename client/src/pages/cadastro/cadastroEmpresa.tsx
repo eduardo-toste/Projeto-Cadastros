@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import alignJustifyFill from '@iconify-icons/mingcute/align-justify-fill';
-import logo from '../../assets/logo.png';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { FaBuilding } from 'react-icons/fa';
@@ -80,6 +78,11 @@ function CadastroEmpresa() {
     useEffect(() => {
         buscaEmpresas()
     }, []);
+    
+
+    const atualizarAlteracoes = () => {
+        buscaEmpresas();
+    };
 
     async function excluiEmpresa(id: string) {
 
@@ -159,16 +162,6 @@ function CadastroEmpresa() {
         });
     }
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     return (
         <>
 
@@ -233,7 +226,7 @@ function CadastroEmpresa() {
                                                     <td>{dado.email}</td>
                                                     <td>
                                                         <div className="d-flex">
-                                                            <ModalEditar />
+                                                            <ModalEditar idEmpresa={dado.id} onSave={atualizarAlteracoes}/>
                                                             <button type="button" className="btn" onClick={() => excluiEmpresa(`${dado.id}`)}>
                                                                 <Icon icon={trashIcon} style={{ fontSize: '20px' }} />
                                                             </button>
