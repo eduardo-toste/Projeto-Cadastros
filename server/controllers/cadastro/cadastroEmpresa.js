@@ -13,7 +13,8 @@ async function buscaEmpresas(req, res) {
             })
         } else {
             return res.status(406).send({
-                message: "Não foi encontrada nenhuma informação"
+                message: "Não foi encontrada nenhuma informação",
+                data: buscarDados.recordset
             })
         }
 

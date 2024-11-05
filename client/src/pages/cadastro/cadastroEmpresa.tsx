@@ -71,6 +71,7 @@ function CadastroEmpresa() {
             .then(function (resposta) {
                 setDados(resposta.data.data)
             }).catch(function (erro) {
+                console.log(erro)
                 toast.error(erro.response.message)
             })
     }
@@ -78,7 +79,7 @@ function CadastroEmpresa() {
     useEffect(() => {
         buscaEmpresas()
     }, []);
-    
+
 
     const atualizarAlteracoes = () => {
         buscaEmpresas();
@@ -101,7 +102,6 @@ function CadastroEmpresa() {
                     toast.error(erro.response.data);
                 }
             })
-
     }
 
 
@@ -152,6 +152,11 @@ function CadastroEmpresa() {
         }).then(function (resposta) {
             toast.success(resposta.data.message)
             buscaEmpresas()
+            setCnpj('')
+            setRazaoSocial('')
+            setTelefone('')
+            setEmail('')
+            setEndereco('')
         }).catch(function (erro) {
             console.log(erro);
             if (erro.response.status === 403 || erro.response.status === 402) {
@@ -226,7 +231,7 @@ function CadastroEmpresa() {
                                                     <td>{dado.email}</td>
                                                     <td>
                                                         <div className="d-flex">
-                                                            <ModalEditar idEmpresa={dado.id} onSave={atualizarAlteracoes}/>
+                                                            <ModalEditar idEmpresa={dado.id} onSave={atualizarAlteracoes} />
                                                             <button type="button" className="btn" onClick={() => excluiEmpresa(`${dado.id}`)}>
                                                                 <Icon icon={trashIcon} style={{ fontSize: '20px' }} />
                                                             </button>
